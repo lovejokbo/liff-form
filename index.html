@@ -59,23 +59,34 @@ let userId = "";
 // ======================
 // 初始化 LIFF
 // ======================
+<script>
 async function init(){
 
-  await liff.init({ liffId: "2010005375-A2USJzj3" });
+  try {
 
-  if(!liff.isLoggedIn()){
-    liff.login();
-    return;
+    await liff.init({ liffId: "2010005375-A2USJzj3" });
+
+    if (!liff.isLoggedIn()) {
+      // ⚠️ LINE WebView 建議不要強制 login
+      document.querySelector("p").innerText = "請點按鈕開始";
+      document.getElementById("btn").disabled = false;
+      return;
+    }
+
+    const profile = await liff.getProfile();
+    window.userId = profile.userId;
+
+    document.querySelector("p").innerText = "已取得 LINE 帳號";
+    document.getElementById("btn").disabled = false;
+
+  } catch (err) {
+    console.log(err);
+    document.querySelector("p").innerText = "LIFF 初始化失敗";
   }
-
-  const profile = await liff.getProfile();
-  userId = profile.userId;
-
-  document.querySelector("p").innerText = "已取得 LINE 帳號";
-  document.getElementById("btn").disabled = false;
 }
 
 init();
+</script>
 
 // ======================
 // 點擊進入 Google 表單
