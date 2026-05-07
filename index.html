@@ -27,10 +27,6 @@ body{
   text-align:center;
 }
 
-h2{
-  margin-bottom:10px;
-}
-
 button{
   width:100%;
   padding:12px;
@@ -48,7 +44,7 @@ button{
 
 <div class="box">
   <h2>🚗 銀河機場接送</h2>
-  <p>正在取得 LINE 資料...</p>
+  <p id="status">正在初始化...</p>
   <button onclick="start()" id="btn" disabled>進入表單</button>
 </div>
 
@@ -57,47 +53,49 @@ button{
 let userId = "";
 
 // ======================
-// 初始化 LIFF
+// LIFF 初始化
 // ======================
-<script>
 async function init(){
 
   try {
 
     await liff.init({ liffId: "2010005375-A2USJzj3" });
 
+    // ❗ 沒登入 → 讓使用者點按鈕登入
     if (!liff.isLoggedIn()) {
-      // ⚠️ LINE WebView 建議不要強制 login
-      document.querySelector("p").innerText = "請點按鈕開始";
+      document.getElementById("status").innerText = "請點擊進入並登入 LINE";
       document.getElementById("btn").disabled = false;
       return;
     }
 
     const profile = await liff.getProfile();
-    window.userId = profile.userId;
+    userId = profile.userId;
 
-    document.querySelector("p").innerText = "已取得 LINE 帳號";
+    document.getElementById("status").innerText = "已取得 LINE 帳號";
     document.getElementById("btn").disabled = false;
 
   } catch (err) {
     console.log(err);
-    document.querySelector("p").innerText = "LIFF 初始化失敗";
+    document.getElementById("status").innerText = "LIFF 初始化失敗";
   }
 }
 
 init();
-</script>
 
 // ======================
-// 點擊進入 Google 表單
+// 按鈕觸發（login + redirect）
 // ======================
 function start(){
 
-  // ⚠️ 你的 Google Form URL（改成你的）
+  // 👉 如果沒登入，在這裡才 login
+  if (!liff.isLoggedIn()) {
+    liff.login();
+    return;
+  }
+
   const baseUrl =
     "https://docs.google.com/forms/d/e/1FAIpQLScUihvA-SnK4odrU-a58kgiWq4x4fH7ADDiP0FAkZtiB1hITw/viewform";
 
-  // ⚠️ entry ID 要換成你的欄位
   const url =
     baseUrl +
     "?usp=pp_url&entry.1568202435=" +
