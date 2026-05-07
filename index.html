@@ -1,7 +1,9 @@
 <script>
 async function init(){
+
   await liff.init({liffId:"2010005375-A2USJzj3"});
 
+  // ⚠️ 等待 LIFF 完全初始化
   if(!liff.isLoggedIn()){
     liff.login();
     return;
@@ -10,12 +12,17 @@ async function init(){
   const profile = await liff.getProfile();
   const userId = profile.userId;
 
-  // ✅ 正確 Google 表單網址
-  const formUrl =
-    "https://docs.google.com/forms/d/e/1FAIpQLScUihvA-SnK4odrU-a58kgiWq4x4fH7ADDiP0FAkZtiB1hITw/viewform"
-    + "?usp=pp_url&entry.1568202435=" + encodeURIComponent(userId);
+  // 🧠 延遲避免空白頁
+  setTimeout(() => {
 
-  window.location.href = formUrl;
+    const formUrl =
+      "https://docs.google.com/forms/d/e/1FAIpQLScUihvA-SnK4odrU-a58kgiWq4x4fH7ADDiP0FAkZtiB1hITw/viewform"
+      + "?usp=pp_url&entry.1568202435=" + encodeURIComponent(userId);
+
+    window.location.replace(formUrl);
+
+  }, 300);
+
 }
 
 init();
