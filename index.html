@@ -10,10 +10,10 @@ async function init(){
   const profile = await liff.getProfile();
   const userId = profile.userId;
 
-  // 👉 跳轉 Google 表單（帶 userId）
+  // ✅ 正確 Google 表單網址
   const formUrl =
-    "https://docs.google.com/forms/d/e/1FAIpQLScUihvA-SnK4odrU-a58kgiWq4x4fH7ADDiP0FAkZtiB1hITw/viewform?usp=header/viewform" +
-    "?usp=pp_url&entry.1568202435=" + userId;
+    "https://docs.google.com/forms/d/e/1FAIpQLScUihvA-SnK4odrU-a58kgiWq4x4fH7ADDiP0FAkZtiB1hITw/viewform"
+    + "?usp=pp_url&entry.1568202435=" + encodeURIComponent(userId);
 
   window.location.href = formUrl;
 }
