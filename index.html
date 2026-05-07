@@ -1,29 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>銀河機場接送</title>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+<style>
+body{
+  font-family:Arial,"Microsoft JhengHei";
+  background:#f5f6f7;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+}
+
+.box{
+  background:#fff;
+  padding:25px;
+  border-radius:12px;
+  width:90%;
+  max-width:420px;
+  box-shadow:0 2px 10px rgba(0,0,0,.1);
+  text-align:center;
+}
+
+h2{
+  margin-bottom:10px;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:15px;
+  border:none;
+  border-radius:8px;
+  background:#111827;
+  color:white;
+  font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>🚗 銀河機場接送</h2>
+  <p>正在取得 LINE 資料...</p>
+  <button onclick="start()" id="btn" disabled>進入表單</button>
+</div>
+
 <script>
+
+let userId = "";
+
+// ======================
+// 初始化 LIFF
+// ======================
 async function init(){
 
-  await liff.init({liffId:"2010005375-A2USJzj3"});
+  await liff.init({ liffId: "2010005375-A2USJzj3" });
 
-  // ⚠️ 等待 LIFF 完全初始化
   if(!liff.isLoggedIn()){
     liff.login();
     return;
   }
 
   const profile = await liff.getProfile();
-  const userId = profile.userId;
+  userId = profile.userId;
 
-  // 🧠 延遲避免空白頁
-  setTimeout(() => {
-
-    const formUrl =
-      "https://docs.google.com/forms/d/e/1FAIpQLScUihvA-SnK4odrU-a58kgiWq4x4fH7ADDiP0FAkZtiB1hITw/viewform"
-      + "?usp=pp_url&entry.1568202435=" + encodeURIComponent(userId);
-
-    window.location.replace(formUrl);
-
-  }, 300);
-
+  document.querySelector("p").innerText = "已取得 LINE 帳號";
+  document.getElementById("btn").disabled = false;
 }
 
 init();
+
+// ======================
+// 點擊進入 Google 表單
+// ======================
+function start(){
+
+  // ⚠️ 你的 Google Form URL（改成你的）
+  const baseUrl =
+    "https://docs.google.com/forms/d/e/1FAIpQLScUihvA-SnK4odrU-a58kgiWq4x4fH7ADDiP0FAkZtiB1hITw/viewform";
+
+  // ⚠️ entry ID 要換成你的欄位
+  const url =
+    baseUrl +
+    "?usp=pp_url&entry.1568202435=" +
+    encodeURIComponent(userId);
+
+  window.location.href = url;
+}
+
 </script>
+
+</body>
+</html>
